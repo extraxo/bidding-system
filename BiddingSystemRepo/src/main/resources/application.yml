@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: BiddingSystem
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/newdb
+    username: postgres
+    password: dsa
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop   # Hibernate will create/update your tables
+    show-sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
