@@ -13,6 +13,10 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
 
+jwt:
+  secret: "ODE2YzBhNmJlMmFkODcxYzM5YWIwNjc5ZTM1Mzc5ZTY0ODc2Y2ZkMzg0MmQwZmEzZTgwYjliM2I="
+  message: "Your message or custom token message"
+
   sql:
     init:
       mode: always

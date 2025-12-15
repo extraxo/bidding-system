@@ -1,4 +1,4 @@
-package com.example.server.config;
+package BiddingSystem.BiddingSystemRepo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,58 +37,12 @@ public class SecurityConfig {
         // permit specific request (3), other authenticated (using our JWT filter)
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/api/user/**",
                         "/api/user/register",
-                        "/api/blog/unrestricted",
-                        "/api/stripe/webhook",
-                        "/api/stripe/**", "/api/user/guardians",
-                        "/api/user/patients",
-                        "/api/user/doctors",
-
-                        "/api/user/doctor/register",
-                        "/api/user/patient/register",
-                        "/api/user/guardian/register",
-
-                        "/api/workDays/allWorkDays",
-
-//                        "/google",
-//                        "/google/callback",
-
-
-                        "/google",
-                        "/google/*",
-                        "/google/**",
-
-                        "/events",
-
-                        "/auth/me",
-
-                        "/api/aiDoctor/sayHello",
-                        "/api/aiDoctor/callGemini",
-
-
-                        "/api/storage/files",      // Public file upload endpoint
-                        "/api/storage/getFiles/**",
-                        "/api/storage/files/{fileId}", // Protected file deletion endpoint (JWT required)
-
-
-
-                        "/api/calendar/doctor",
-                        "/api/calendar/doctor/off",
-                        "/api/calendar/doctor/*/exception",
-
-                        "/api/appointments",
-                        "/api/appointments/pastUserAppointments",
-                        "/api/appointments/**",
-
-                        "/guardians",
-                        "/api/user/doctor/register",
+                        "api/user/login",
                         "/api/stripe/**")
                 .permitAll()
                 .anyRequest().authenticated());
 
-        // .permitAll()
-        // .anyRequest().authenticated());
 
         // don't use sessions because again we use JWT
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

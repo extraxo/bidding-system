@@ -1,7 +1,7 @@
-package com.example.server.config;
+package BiddingSystem.BiddingSystemRepo.config;
 
 
-import com.example.server.models.UserModels.User;
+import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;

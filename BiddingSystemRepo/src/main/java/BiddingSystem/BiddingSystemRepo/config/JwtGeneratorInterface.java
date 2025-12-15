@@ -1,6 +1,7 @@
-package com.example.server.config;
+package BiddingSystem.BiddingSystemRepo.config;
 
-import com.example.server.models.UserModels.User;
+import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
+
 import java.util.Map;
 
 public interface JwtGeneratorInterface {

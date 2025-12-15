@@ -1,4 +1,4 @@
-package com.example.server.config;
+package BiddingSystem.BiddingSystemRepo.config;
 
 import org.springframework.lang.NonNull;
 import org.springframework.context.annotation.Bean;

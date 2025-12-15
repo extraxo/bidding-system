@@ -1,7 +1,7 @@
-package com.example.server.config;
+package BiddingSystem.BiddingSystemRepo.config;
 
-import com.example.server.models.UserModels.User;
-import com.example.server.service.UserServices.BaseUserService;
+import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
+import BiddingSystem.BiddingSystemRepo.Service.BaseUserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -44,54 +44,8 @@ public class JwtFilter extends GenericFilterBean {
         String method = request.getMethod();
 
         if (servletPath.startsWith("/api/user/login") ||
+
                 servletPath.startsWith("/api/user/register") ||
-                servletPath.startsWith("/api/blog/unrestricted") ||
-                servletPath.startsWith("/api/user/users") ||
-
-
-                servletPath.startsWith("/api/user/guardians") ||
-                servletPath.startsWith("/api/user/patients") ||
-                servletPath.startsWith("/api/user/doctors") ||
-
-                servletPath.startsWith("/api/workDays/allWorkDays") ||
-
-                servletPath.startsWith("/api/user/doctor/register") ||
-                servletPath.startsWith("/api/user/patient/register") ||
-                servletPath.startsWith("/api/user/guardian/register") ||
-
-                servletPath.startsWith("/api/calendar/doctor") ||
-
-                servletPath.startsWith("/api/aiDoctor") ||
-                servletPath.matches("/api/aiDoctor/callHello") ||
-
-
-                servletPath.startsWith("/api/storage/files") ||  // <-- This is the public file endpoint
-
-                servletPath.startsWith("/api/storage/getFiles/") ||  // <-- Add this line to allow this URL
-                servletPath.startsWith("/api/storage/**") ||  //
-
-
-            servletPath.startsWith("/api/calendar/doctor/off") ||
-
-                servletPath.matches("/api/calendar/doctor/\\d+/exception") ||
-
-                servletPath.matches("/api/appointments") ||
-
-                servletPath.contains("/google") ||
-//                servletPath.equals("/google/callback") ||
-                                servletPath.startsWith("/events") ||
-
-                servletPath.equals("/auth/me") ||
-
-                servletPath.matches("/api/appointments/doctor") ||
-                servletPath.matches("/api/appointments/pastUserAppointments") ||
-                servletPath.matches("/api/appointments/\\d+/feedback") ||
-
-
-                servletPath.matches("/api/storage/files") ||
-
-
-                servletPath.equals("/api/stripe/webhook") ||
                 servletPath.startsWith("/api/stripe/")) {
 
             filterChain.doFilter(request, response);
@@ -119,11 +73,6 @@ public class JwtFilter extends GenericFilterBean {
             User realUser = baseUserService.getUserByEmail(email);
 
 
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
-
-            // Create authentication token with the authenticated user and set it in security context
 
 
             if (realUser != null) {

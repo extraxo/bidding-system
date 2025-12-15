@@ -1,4 +1,4 @@
-package BiddingSystem.BiddingSystemRepo.Models.Entity;
+package BiddingSystem.BiddingSystemRepo.Model.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,5 +13,10 @@ public class User extends BaseEntity {
     private String name;
 
     private int age;
+
+    @Column(unique = true)
+    private String email;
+
+    private String password;
 
 }
