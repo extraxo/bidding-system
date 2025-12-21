@@ -1,5 +1,6 @@
 package BiddingSystem.BiddingSystemRepo.Model.Entity;
 
+import BiddingSystem.BiddingSystemRepo.Model.Enum.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,8 @@ import lombok.Setter;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    private String name;
+    @Column(unique = true)
+    private String username;
 
     private int age;
 
@@ -18,5 +20,10 @@ public class User extends BaseEntity {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role = RoleEnum.BaseUser;
+
+    private String SECRET_INFORMATION = "THIS_STRING_SHOULD_NOT_BE_EXPOSED_EVER";
 
 }

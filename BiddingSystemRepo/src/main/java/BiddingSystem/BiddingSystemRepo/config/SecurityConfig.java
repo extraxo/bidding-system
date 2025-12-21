@@ -37,12 +37,15 @@ public class SecurityConfig {
         // permit specific request (3), other authenticated (using our JWT filter)
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/api/user/register",
-                        "api/user/login",
-                        "/api/stripe/**")
-                .permitAll()
+                        "/api/v1/user/register",
+                        "/api/v1/user/login",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",    // Ensure this is also allowed
+                        "/v3/api-docs",        // Explicitly allow this path
+                        "/v3/api-docs/**"      // Allow all v3/api-docs paths
+                )
+                .permitAll()  // These paths don't need JWT authentication
                 .anyRequest().authenticated());
-
 
         // don't use sessions because again we use JWT
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -20,3 +20,13 @@ jwt:
   sql:
     init:
       mode: always
+
+
+
+springdoc:
+  api-docs:
+    enabled: true  # Ensures that the OpenAPI docs are generated
+  swagger-ui:
+    enabled: true  # Enables Swagger UI
+    path: /swagger-ui.html  # Custom path for Swagger UI
+    url: /v3/api-docs  # Swagger docs location
