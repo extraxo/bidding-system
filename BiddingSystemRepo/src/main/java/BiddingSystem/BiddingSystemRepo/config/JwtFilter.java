@@ -1,7 +1,7 @@
 package BiddingSystem.BiddingSystemRepo.config;
 
 import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
-import BiddingSystem.BiddingSystemRepo.Service.BaseUserService;
+import BiddingSystem.BiddingSystemRepo.Service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,6 +11,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +26,12 @@ import java.util.Collections;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-    private final String secret = "supersecretkeysupersecretkey123456"; // same as application.yml
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private final BaseUserService<User> baseUserService;
+    private final UserService baseUserService;
 
-    public JwtFilter(@Lazy BaseUserService<User> baseUserService) {
+    public JwtFilter(@Lazy UserService baseUserService) {
         this.baseUserService = baseUserService;
     }
 
@@ -41,14 +43,14 @@ public class JwtFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String servletPath = request.getServletPath();
-        String method = request.getMethod();
 
-        if (servletPath.startsWith("/api/user/login") ||
-
-                servletPath.startsWith("/api/user/register") ||
+        if (servletPath.startsWith("/api/v1/user/login") ||
+                servletPath.startsWith("/swagger-ui") ||
+                servletPath.startsWith("/v3/api-docs") ||  // Allow /v3/api-docs to be accessed without token
+                servletPath.startsWith("/api/v1/user/register") ||
                 servletPath.startsWith("/api/stripe/")) {
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);  // Let the request go through without JWT authentication
             return;
         }
 
@@ -73,10 +75,7 @@ public class JwtFilter extends GenericFilterBean {
             User realUser = baseUserService.getUserByEmail(email);
 
 
-
-
             if (realUser != null) {
-                // Set the principal as the email (String)
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
 

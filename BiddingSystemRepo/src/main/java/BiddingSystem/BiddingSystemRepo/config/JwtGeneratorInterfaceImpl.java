@@ -13,9 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Token Blacklisting (not mandatory)
 @Service
-public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
+public class JwtGeneratorInterfaceImpl{
 
     @Value("${jwt.secret}")
     private String secret;
@@ -23,8 +22,8 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
     @Value("${jwt.message}")
     private String message;
 
+    private static final int TOKEN_EXPIRY_TIME_IN_MINUTES = 60;
 
-    @Override
     public Map<String, String> generateToken(User user) {
 
         String jwtToken;
@@ -36,7 +35,7 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
 //                24 minutes xD
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * TOKEN_EXPIRY_TIME_IN_MINUTES))
                 .and()
 //                end of jwt builder back to main one
 
