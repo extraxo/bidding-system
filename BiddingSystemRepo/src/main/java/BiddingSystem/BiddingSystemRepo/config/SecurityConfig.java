@@ -1,5 +1,7 @@
 package BiddingSystem.BiddingSystemRepo.config;
 
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,14 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
+
 //@EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
+    @Value("${jwt.secret}")
+    private String secret; // Inject secret from application.properties
 
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
+    @Bean
+    public SecretKey secretKey() {
+        // Convert the secret string to a SecretKey
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     @Bean
@@ -27,7 +34,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtFilter jwtFilter) throws Exception {
 
         // disable CSRF since we use fronted (any other port, not server side rendered
         // app)
@@ -56,6 +63,7 @@ public class SecurityConfig {
         // the logic of UsernamePasswordAuthenticationFilter is skipped since user
         // already trusted
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

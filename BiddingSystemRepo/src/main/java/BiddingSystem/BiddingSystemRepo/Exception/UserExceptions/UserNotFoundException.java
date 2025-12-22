@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public class UserNotFoundException extends BaseCustomException{
 
     public UserNotFoundException(String message) {
-        super(message, HttpStatus.NOT_FOUND);  // Custom 404 status code
+        super(message, HttpStatus.NOT_FOUND);
 
     }
 

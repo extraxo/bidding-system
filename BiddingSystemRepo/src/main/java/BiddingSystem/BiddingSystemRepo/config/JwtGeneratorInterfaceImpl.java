@@ -12,6 +12,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class JwtGeneratorInterfaceImpl{
@@ -26,11 +27,12 @@ public class JwtGeneratorInterfaceImpl{
 
     public Map<String, String> generateToken(User user) {
 
+        String jti = UUID.randomUUID().toString();
         String jwtToken;
         jwtToken = Jwts.builder()
                 .claims()
 //               Begins adding claims (payload info).
-
+                .id(jti)
 //                subject is put into the token - ACTUAL INFO IN IT
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))

@@ -19,31 +19,9 @@ import java.util.Map;
 public class UserService  {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    private final JwtGeneratorInterfaceImpl jwtGeneratorInterface;
 
-
-    public UserService(UserRepository userRepository,JwtGeneratorInterfaceImpl jwtGeneratorInterface){
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
-        this.jwtGeneratorInterface = jwtGeneratorInterface;
-    }
-
-    public User register(UserRegisterDTO dto) {
-        if (userRepository.findUserByEmail(dto.getEmail()) != null) {
-            throw new EmailAlreadyExistsException("EMAIL_ALREADY_EXISTS");
-        }
-
-        if (userRepository.findUserByUsername(dto.getUsername()) != null) {
-            throw new UsernameAlreadyExistsException("USERNAME_ALREADY_EXISTS");
-        }
-
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setAge(dto.getAge());
-        user.setPassword(encoder.encode(dto.getPassword()));
-
-        return userRepository.save(user);
     }
 
 
