@@ -21,7 +21,9 @@ jwt:
     init:
       mode: always
 
-
+h2:
+  console:
+    enabled: true
 
 springdoc:
   api-docs:

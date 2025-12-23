@@ -8,6 +8,7 @@ import BiddingSystem.BiddingSystemRepo.Service.AuthService;
 import BiddingSystem.BiddingSystemRepo.Service.UserService;
 import BiddingSystem.BiddingSystemRepo.config.BlacklistStore;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterDTO dto) {
+    public ResponseEntity<UserRegisterResponseDTO> register(@Valid @RequestBody UserRegisterDTO dto) {
         return ResponseEntity.ok(modelMapper.map(authService.register(dto), UserRegisterResponseDTO.class));
     }
 
