@@ -28,11 +28,8 @@ public class AuthService {
     }
 
     public Map<String, String> login(UserLoginDTO dto) {
-        User user = userRepository.findUserByEmail(dto.getEmail());
 
-        if (user == null) {
-            throw new UserNotFoundException("User not registered yet!");
-        }
+        User user = userRepository.findUserByEmail(dto.getEmail()).orElseThrow(() -> new UserNotFoundException("User with such email not found!"));
 
         if (!encoder.matches(dto.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid password!");
@@ -43,13 +40,16 @@ public class AuthService {
 
 
     public User register(UserRegisterDTO dto) {
-        if (userRepository.findUserByEmail(dto.getEmail()) != null) {
-            throw new EmailAlreadyExistsException("Email already exists!");
-        }
 
-        if (userRepository.findUserByUsername(dto.getUsername()) != null) {
-            throw new UsernameAlreadyExistsException("Username already exists");
-        }
+        userRepository.findUserByEmail(dto.getEmail())
+                .ifPresent(user -> {
+                    throw new EmailAlreadyExistsException("User with this email already exists!");
+                });
+
+        userRepository.findUserByUsername(dto.getUsername())
+                .ifPresent(user -> {
+                    throw new UsernameAlreadyExistsException("User with such username already exists!");
+                });
 
         User user = new User();
         user.setUsername(dto.getUsername());

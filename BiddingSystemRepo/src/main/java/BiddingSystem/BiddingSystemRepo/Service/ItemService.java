@@ -2,6 +2,7 @@ package BiddingSystem.BiddingSystemRepo.Service;
 
 import BiddingSystem.BiddingSystemRepo.DTO.ItemDTO.RegisterItemDTO;
 import BiddingSystem.BiddingSystemRepo.Exception.ItemExceptions.ItemAlreadyInUserInventory;
+import BiddingSystem.BiddingSystemRepo.Exception.UserExceptions.UserNotFoundException;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Auction;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Item;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
@@ -33,7 +34,7 @@ public class ItemService {
     public void addItem(@Valid RegisterItemDTO registerItemDTO) throws ItemAlreadyInUserInventory {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
 
         if (itemRepository.existsByOwnerAndName(user,registerItemDTO.getName())){
             throw new ItemAlreadyInUserInventory("Item with same name already in current user's inventory!");

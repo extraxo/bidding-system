@@ -1,5 +1,9 @@
 package BiddingSystem.BiddingSystemRepo.Service;
 
+import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.AddItemToAuctionDTO;
+import BiddingSystem.BiddingSystemRepo.Exception.AuctionException.AuctionNotFound;
+import BiddingSystem.BiddingSystemRepo.Exception.ItemExceptions.ItemNotFound;
+import BiddingSystem.BiddingSystemRepo.Exception.UserExceptions.UserNotFoundException;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Auction;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Item;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
@@ -24,22 +28,27 @@ public class AuctionService {
         this.userRepository = userRepository;
     }
 
+    public void addItemToAuction(AddItemToAuctionDTO addItemToAuctionDTO) {
 
-    public void addItemToAuction(Long itemId) {
-
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Item not found with id " + itemId));
+        Item item = itemRepository.findById(addItemToAuctionDTO.getItemId()).orElseThrow(() -> new ItemNotFound("Item not found with id " + addItemToAuctionDTO.getItemId()));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
 
         Auction auction = new Auction();
         auction.setItem(item);
-        auction.setAuctionStatusEnum(AuctionStatusEnum.ACTIVE);
+        auction.setAuctionStatusEnum(addItemToAuctionDTO.isDraft() ? AuctionStatusEnum.DRAFT : AuctionStatusEnum.ACTIVE);
         auction.setOwner(user);
 
         auctionRepository.save(auction);
     }
 
+    public void makePublish(Long auctionId){
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new AuctionNotFound("Item not found with id " + auctionId));
+
+        auction.setAuctionStatusEnum(AuctionStatusEnum.ACTIVE);
+        auctionRepository.save(auction);
+    }
 
 }

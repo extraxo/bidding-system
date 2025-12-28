@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -35,7 +36,7 @@ public class User extends BaseEntity {
     private String SECRET_INFORMATION = "THIS_STRING_SHOULD_NOT_BE_EXPOSED_EVER";
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner")
-    private Set<Item> itemSet;
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Item> itemSet = new HashSet<>();
 
 }
