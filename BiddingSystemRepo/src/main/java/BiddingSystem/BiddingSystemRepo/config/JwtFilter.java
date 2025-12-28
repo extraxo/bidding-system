@@ -1,5 +1,6 @@
 package BiddingSystem.BiddingSystemRepo.config;
 
+import BiddingSystem.BiddingSystemRepo.Exception.UserExceptions.UserNotFoundException;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
 import BiddingSystem.BiddingSystemRepo.Repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -26,8 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
 
     public JwtFilter(BlacklistStore blacklistStore,
-            UserRepository userRepository,
-            SecretKey key) {
+                     UserRepository userRepository,
+                     SecretKey key) {
         this.userRepository = userRepository;
         this.blacklistStore = blacklistStore;
         this.key = key;
@@ -68,8 +70,8 @@ public class JwtFilter extends OncePerRequestFilter {
             request.setAttribute("jti", jti);
             String userIdStr = claims.getSubject();
             Long userId = Long.valueOf(userIdStr);
-            User user = userRepository.findUserById(userId);
 
+            User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
             if (user == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not found");
                 return;

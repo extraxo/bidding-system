@@ -1,5 +1,6 @@
 package BiddingSystem.BiddingSystemRepo.Controller;
 
+import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.AddItemToAuctionDTO;
 import BiddingSystem.BiddingSystemRepo.Service.AuctionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ public class AuctionController {
 
 
     @PostMapping("/addAuction")
-    public ResponseEntity<?> addItem(@RequestBody Long itemId){
-        auctionService.addItemToAuction(itemId);
+    public ResponseEntity<?> addItem(@RequestBody AddItemToAuctionDTO addItemToAuctionDTO){
+        auctionService.addItemToAuction(addItemToAuctionDTO);
         return ResponseEntity.ok("Added successfully");
     }
 
