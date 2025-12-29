@@ -18,7 +18,7 @@ public class AuctionController {
 
     @PostMapping("/addAuction")
     public ResponseEntity<?> addItem(@RequestBody AddItemToAuctionDTO addItemToAuctionDTO){
-        auctionService.addItemToAuction(addItemToAuctionDTO);
+        auctionService.createAuction(addItemToAuctionDTO);
         return ResponseEntity.ok("Added successfully");
     }
 

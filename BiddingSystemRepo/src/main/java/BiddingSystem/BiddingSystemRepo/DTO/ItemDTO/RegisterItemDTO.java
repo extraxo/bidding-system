@@ -2,6 +2,7 @@ package BiddingSystem.BiddingSystemRepo.DTO.ItemDTO;
 
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemCategoryEnum;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemConditionEnum;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,4 +24,7 @@ public class RegisterItemDTO {
 
     private ItemConditionEnum itemConditionEnum;
 
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 }

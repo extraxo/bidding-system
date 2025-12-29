@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,17 +17,21 @@ import java.util.List;
 @Table(name = "auction")
 public class Auction extends BaseEntity {
 
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     private User owner;
 
-    @OneToOne
+    @ManyToOne
     private Item item;
 
-    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime listedAt = LocalDateTime.now();
 
-    private LocalDateTime expire_at;
+    private LocalDateTime startingAt;
 
+    private Duration auctionDuration = Duration.ofDays(1);
+
+    private LocalDateTime endsAt;
+
+    private BigDecimal reservePrice;
 
 //    Active auctions will be set in cache - fast-access memory store -> Write-through, Write-behind (Lazy), Cache-Aside
     @Enumerated(value = EnumType.STRING)
@@ -34,10 +40,8 @@ public class Auction extends BaseEntity {
     @ManyToOne
     private User winner;
 
-    //    current One
     @OneToMany(mappedBy = "auction", cascade = CascadeType.PERSIST)
     private List<Bid> winnerBid;
 
-//    private BigDecimal winnerPrice - > winnerBid.getPrice();
 
 }

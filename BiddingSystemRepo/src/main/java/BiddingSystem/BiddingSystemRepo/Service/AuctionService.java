@@ -2,6 +2,7 @@ package BiddingSystem.BiddingSystemRepo.Service;
 
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.AddItemToAuctionDTO;
 import BiddingSystem.BiddingSystemRepo.Exception.AuctionException.AuctionNotFound;
+import BiddingSystem.BiddingSystemRepo.Exception.AuctionException.ItemAlreadyInAuction;
 import BiddingSystem.BiddingSystemRepo.Exception.ItemExceptions.ItemNotFound;
 import BiddingSystem.BiddingSystemRepo.Exception.UserExceptions.UserNotFoundException;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Auction;
@@ -28,13 +29,17 @@ public class AuctionService {
         this.userRepository = userRepository;
     }
 
-    public void addItemToAuction(AddItemToAuctionDTO addItemToAuctionDTO) {
-
-        Item item = itemRepository.findById(addItemToAuctionDTO.getItemId()).orElseThrow(() -> new ItemNotFound("Item not found with id " + addItemToAuctionDTO.getItemId()));
+    public void createAuction(AddItemToAuctionDTO addItemToAuctionDTO) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
         User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
+
+        Item item = itemRepository.findByIdAndOwnerId(addItemToAuctionDTO.getItemId(),userId).orElseThrow(() -> new ItemNotFound("Item not found with id " + addItemToAuctionDTO.getItemId()));
+
+        if (auctionRepository.existsByItemIdAndOwnerIdAndAuctionStatusEnum(item.getId(),userId,AuctionStatusEnum.ACTIVE)){
+            throw new ItemAlreadyInAuction("Current item already in active auction");
+        }
 
         Auction auction = new Auction();
         auction.setItem(item);
@@ -44,8 +49,14 @@ public class AuctionService {
         auctionRepository.save(auction);
     }
 
-    public void makePublish(Long auctionId){
+
+//    TODO: Extend the make publish logic
+    public void makePublish(Long auctionId) throws Exception {
         Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new AuctionNotFound("Item not found with id " + auctionId));
+
+        if (auction.getAuctionStatusEnum() != AuctionStatusEnum.DRAFT){
+            throw new Exception("Invalid change of auction status");
+        }
 
         auction.setAuctionStatusEnum(AuctionStatusEnum.ACTIVE);
         auctionRepository.save(auction);

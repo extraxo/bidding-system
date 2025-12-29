@@ -21,29 +21,26 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
 
 
     public ItemService(ItemRepository itemRepository,UserRepository userRepository,ModelMapper modelMapper){
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
     }
 
-    public void addItem(@Valid RegisterItemDTO registerItemDTO) throws ItemAlreadyInUserInventory {
+    public void addItem(Item item) throws ItemAlreadyInUserInventory {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
         User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
 
-        if (itemRepository.existsByOwnerAndName(user,registerItemDTO.getName())){
+        if (itemRepository.existsByOwnerAndName(user,item.getName())){
             throw new ItemAlreadyInUserInventory("Item with same name already in current user's inventory!");
         }
 
-        Item newItem = modelMapper.map(registerItemDTO, Item.class);
-        newItem.setOwner(user);
+        item.setOwner(user);
 
-        itemRepository.save(newItem);
+        itemRepository.save(item);
     }
 
 }

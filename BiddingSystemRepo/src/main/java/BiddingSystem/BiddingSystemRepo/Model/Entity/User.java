@@ -14,6 +14,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+//TODO: User ban/block list
+// TODO: Maximum active auctions
 public class User extends BaseEntity {
 
     @Column(unique = true)
