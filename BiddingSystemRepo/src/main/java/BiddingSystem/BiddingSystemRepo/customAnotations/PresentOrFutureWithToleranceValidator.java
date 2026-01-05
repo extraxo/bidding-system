@@ -1,4 +1,4 @@
-package BiddingSystem.BiddingSystemRepo;
+package BiddingSystem.BiddingSystemRepo.customAnotations;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

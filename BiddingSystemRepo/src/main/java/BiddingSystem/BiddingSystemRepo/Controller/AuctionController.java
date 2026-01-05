@@ -2,10 +2,9 @@ package BiddingSystem.BiddingSystemRepo.Controller;
 
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.AddItemToAuctionDTO;
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.CreateAuctionInput;
-import BiddingSystem.BiddingSystemRepo.Model.Entity.Item;
+import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.MakePaymentDTO;
 import BiddingSystem.BiddingSystemRepo.Service.AuctionService;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +33,11 @@ public class AuctionController {
         );
         auctionService.createAuction(input);
         return ResponseEntity.ok("Added successfully");
+    }
+
+    public ResponseEntity<?> makeAuctionPayment(@RequestBody MakePaymentDTO makePaymentDTO){
+        auctionService.makePayment(makePaymentDTO.getAuctionId());
+        return ResponseEntity.ok("PaymentSuccessfully");
     }
 
 }

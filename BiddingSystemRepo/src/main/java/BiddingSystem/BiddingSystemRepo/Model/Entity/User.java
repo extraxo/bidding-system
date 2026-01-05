@@ -3,10 +3,14 @@ package BiddingSystem.BiddingSystemRepo.Model.Entity;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,17 +22,28 @@ import java.util.Set;
 // TODO: Maximum active auctions
 public class User extends BaseEntity {
 
-    @Column(unique = true)
+    @NotBlank
+    @Column(unique = true,nullable = false)
     private String username;
 
+    @Min(18)
+    @Column(nullable = false)
     private int age;
 
+    @Email
+    @NotBlank
     @Column(unique = true)
     private String email;
 
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
+    @NotBlank
+    @Column(nullable = false)
     private String address;
+
+    private BigDecimal balance = BigDecimal.valueOf(0.0);
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role = RoleEnum.BaseUser;
@@ -38,7 +53,7 @@ public class User extends BaseEntity {
     private String SECRET_INFORMATION = "THIS_STRING_SHOULD_NOT_BE_EXPOSED_EVER";
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Item> itemSet = new HashSet<>();
 
 }

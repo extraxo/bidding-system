@@ -6,6 +6,7 @@ public enum AuctionStatusEnum {
     ACTIVE,
     PENDING_PAYMENT,
     SUCCESS,
-    FAILED
+    ENDED_FAILED,
+    ENDED_SUCCESS
 
 }

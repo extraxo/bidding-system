@@ -17,14 +17,15 @@ import java.util.Map;
 @Service
 public class AuthService {
 
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder encoder;
     private final JwtGeneratorInterfaceImpl jwtGeneratorInterface;
     private final UserRepository userRepository;
 
 
-    public AuthService(UserRepository userRepository, JwtGeneratorInterfaceImpl jwtGeneratorInterface) {
+    public AuthService(UserRepository userRepository, JwtGeneratorInterfaceImpl jwtGeneratorInterface,BCryptPasswordEncoder encoder) {
         this.jwtGeneratorInterface = jwtGeneratorInterface;
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
     public Map<String, String> login(UserLoginDTO dto) {
@@ -56,6 +57,8 @@ public class AuthService {
         user.setEmail(dto.getEmail());
         user.setAge(dto.getAge());
         user.setPassword(encoder.encode(dto.getPassword()));
+        user.setAddress(dto.getAddress());
+
 
         return userRepository.save(user);
     }
