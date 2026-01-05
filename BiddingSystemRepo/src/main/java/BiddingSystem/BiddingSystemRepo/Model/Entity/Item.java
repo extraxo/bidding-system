@@ -27,8 +27,8 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemConditionEnum itemConditionEnum;
 
-//    CHANGED FROM PERSIST FOR THE TESTS
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
 }

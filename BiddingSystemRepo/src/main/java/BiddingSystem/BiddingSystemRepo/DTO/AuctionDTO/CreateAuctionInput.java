@@ -1,13 +1,11 @@
 package BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO;
 
 
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @AllArgsConstructor

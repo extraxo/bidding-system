@@ -18,9 +18,6 @@ import java.util.List;
 @Table(name = "auction")
 public class Auction extends BaseEntity {
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private User owner;
-
     @ManyToOne
     private Item item;
 
@@ -36,15 +33,22 @@ public class Auction extends BaseEntity {
 
     private BigDecimal startingPrice;
 
-//    Active auctions will be set in cache - fast-access memory store -> Write-through, Write-behind (Lazy), Cache-Aside
+    private BigDecimal minimumIncrement;
+
     @Enumerated(value = EnumType.STRING)
     private AuctionStatusEnum auctionStatusEnum;
+
+    private ZonedDateTime paymentDeadline;
 
     @ManyToOne
     private User winner;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "winner_bid_id")
+    private Bid winnerBid;
+
     @OneToMany(mappedBy = "auction", cascade = CascadeType.PERSIST)
-    private List<Bid> winnerBid;
+    private List<Bid> listOfBids;
 
     @PrePersist
     public void setEndsAt(){

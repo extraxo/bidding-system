@@ -19,9 +19,9 @@ public class Bid extends BaseEntity {
 
     private BigDecimal price;
 
-    @OneToOne
+    @ManyToOne
     private User user;
 
-    private ZonedDateTime created_at = ZonedDateTime.now();
+    private ZonedDateTime createdAt = ZonedDateTime.now();
 
 }

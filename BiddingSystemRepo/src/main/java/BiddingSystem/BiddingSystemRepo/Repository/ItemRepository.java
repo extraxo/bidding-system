@@ -13,5 +13,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     boolean existsByOwnerAndName(User user, String name);
 
-    Optional<Item> findByIdAndOwnerId(Long itemId, Long ownerId);
+    Optional<Item> findByIdAndOwner_Id(Long itemId, Long ownerId);
 }

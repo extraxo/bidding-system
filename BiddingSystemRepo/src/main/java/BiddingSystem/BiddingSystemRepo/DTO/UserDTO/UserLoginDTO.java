@@ -1,11 +1,13 @@
 package BiddingSystem.BiddingSystemRepo.DTO.UserDTO;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserLoginDTO {
 
     private String email;

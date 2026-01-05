@@ -3,11 +3,13 @@ package BiddingSystem.BiddingSystemRepo.DTO.UserDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserRegisterDTO {
 
     @NotBlank(message = "Username is required")
@@ -22,4 +24,8 @@ public class UserRegisterDTO {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Address is required")
+    private String address;
+
 }

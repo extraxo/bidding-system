@@ -150,6 +150,45 @@ public class AuctionTest extends BaseTestClass {
     }
 
     @Test
+    public void addingItemToAuction_shouldRunSuccessfully_whenNotPassedStartTime() throws Exception {
+
+        ZonedDateTime requestTime = ZonedDateTime.now();
+        Duration duration = Duration.ofMinutes(50L);
+
+        mockMvc.perform(
+                        post("/api/v1/auction/addAuction")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                            {
+                                                "itemId": %d,
+                                                "startingAt": "%s",
+                                                "auctionDuration": "%s",
+                                                "startingPrice": 10.00,
+                                                "reservePrice": 20.00
+                                            }
+                                        """
+                                        .formatted(itemId,
+                                                requestTime.toString(),
+                                                duration.toString()
+                                        )
+                                )
+                )
+                .andExpect(status().is2xxSuccessful());
+
+        Auction auction = auctionRepository.findByItemId(itemId).orElseThrow(() -> new AssertionError("Auction not created"));
+
+        Assertions.assertEquals(auction.getItem().getId(), itemId);
+
+        Assertions.assertEquals(requestTime.toInstant(),
+                auction.getStartingAt().toInstant());
+
+        Assertions.assertEquals(AuctionStatusEnum.ACTIVE, auction.getAuctionStatusEnum());
+
+        Assertions.assertEquals(requestTime.plus(duration).toInstant(), auction.getEndsAt().toInstant());
+
+    }
+
+    @Test
     public void addingItemToAuction_shouldRunSuccessfully_whenValidInputAndDateInFuture() throws Exception {
 
         ZonedDateTime requestTime = ZonedDateTime.now().plusSeconds(1);

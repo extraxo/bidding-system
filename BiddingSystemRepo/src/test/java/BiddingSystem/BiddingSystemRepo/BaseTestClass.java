@@ -50,6 +50,7 @@ public class BaseTestClass {
 
     @BeforeEach
     public void setUp() throws Exception {
+        auctionRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
 
@@ -57,6 +58,8 @@ public class BaseTestClass {
         user.setEmail("kacoLudiq@abv.bg");
         user.setUsername("kaco");
         user.setPassword(passwordEncoder.encode("ivoIstinata"));
+        user.setAge(30);
+        user.setAddress("Some street");
         userRepository.save(user);
     }
 
