@@ -82,9 +82,7 @@ public class AuctionService {
                         ? input.getDuration()
                         : Duration.ofDays(1);
 
-        Duration auctionDuration = (input.getDuration() != null)
-                ? input.getDuration()
-                : Duration.ofDays(1);
+
 
         Auction auction = new Auction();
         auction.setItem(Item);

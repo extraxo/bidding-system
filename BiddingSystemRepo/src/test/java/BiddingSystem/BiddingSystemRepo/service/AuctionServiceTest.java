@@ -59,13 +59,27 @@ public class AuctionServiceTest {
     private static final BigDecimal STARTING_PRICE = BigDecimal.TEN;
     private static final BigDecimal RESERVE_PRICE = BigDecimal.valueOf(20);
 
-    private CreateAuctionInput createInput(ZonedDateTime startingAt) {
+    private CreateAuctionInput createValidInput(ZonedDateTime startingAt) {
         return new CreateAuctionInput(
                 ITEM_ID,
                 startingAt,
                 DEFAULT_DURATION,
                 STARTING_PRICE,
                 RESERVE_PRICE
+        );
+    }
+
+    private CreateAuctionInput createInput(
+            ZonedDateTime startingAt,
+            BigDecimal startingPrice,
+            BigDecimal reservePrice
+    ) {
+        return new CreateAuctionInput(
+                ITEM_ID,
+                startingAt,
+                DEFAULT_DURATION,
+                startingPrice,
+                reservePrice
         );
     }
 
@@ -104,7 +118,7 @@ public class AuctionServiceTest {
     @Test
     public void givenInvalidItemId_shouldFail(){
 
-        CreateAuctionInput createAuctionInput = createInput(ZonedDateTime.now());
+        CreateAuctionInput createAuctionInput = createValidInput(ZonedDateTime.now());
 
         mockItemNotFound();
 
@@ -117,7 +131,7 @@ public class AuctionServiceTest {
     @Test
     public void givenActiveAuctionStatus_addingItemToAuctionShouldFail(){
 
-        CreateAuctionInput createAuctionInput = createInput(ZonedDateTime.now());
+        CreateAuctionInput createAuctionInput = createValidInput(ZonedDateTime.now());
 
         mockItemFound();
 
@@ -134,7 +148,7 @@ public class AuctionServiceTest {
     @Test
     public void givenActiveScheduledStatus_addingItemToAuctionShouldFail(){
 
-        CreateAuctionInput createAuctionInput = createInput(ZonedDateTime.now());
+        CreateAuctionInput createAuctionInput = createValidInput(ZonedDateTime.now());
 
 
         mockItemFound();
@@ -189,7 +203,7 @@ public class AuctionServiceTest {
         Duration subtractedPeriodToBePassed = Duration.ofSeconds(0);
         ZonedDateTime startingAt = now.minus(subtractedPeriodToBePassed);
 
-        CreateAuctionInput createAuctionInput = createInput(startingAt);
+        CreateAuctionInput createAuctionInput = createValidInput(startingAt);
 
         Item item = mockItemFound();
 
@@ -215,7 +229,7 @@ public class AuctionServiceTest {
         Duration futureOffset = Duration.ofSeconds(1);
         ZonedDateTime startingAt = now.plus(futureOffset);
 
-        CreateAuctionInput createAuctionInput = createInput(startingAt);
+        CreateAuctionInput createAuctionInput = createValidInput(startingAt);
 
         Item item = mockItemFound();
 
@@ -232,6 +246,93 @@ public class AuctionServiceTest {
         assertEquals(RESERVE_PRICE, savedAuction.getReservePrice());
         assertEquals(STARTING_PRICE, savedAuction.getStartingPrice());
         assertEquals(AuctionStatusEnum.SCHEDULED, savedAuction.getAuctionStatusEnum());
+    }
+
+    @Test
+    void givenNegativeReservePrice_shouldFail() {
+        CreateAuctionInput input = createInput(
+                ZonedDateTime.now().plusSeconds(1),
+                BigDecimal.TEN,
+                BigDecimal.valueOf(-1)
+        );
+
+        mockItemFound();
+
+        IllegalArgumentException ex =
+                assertThrows(IllegalArgumentException.class,
+                        () -> auctionService.createAuction(input));
+
+        assertEquals("Reserve price must be positive", ex.getMessage());
+    }
+
+    @Test
+    void givenNegativeStartingPrice_shouldFail() {
+        CreateAuctionInput input = createInput(
+                ZonedDateTime.now().plusSeconds(1),
+                BigDecimal.valueOf(-1),
+                BigDecimal.TEN
+        );
+        mockItemFound();
+
+        IllegalArgumentException ex =
+                assertThrows(IllegalArgumentException.class,
+                        () -> auctionService.createAuction(input));
+
+        assertEquals("Starting price must be positive", ex.getMessage());
+    }
+
+    @Test
+    void givenStartingBiggerThanReserve_shouldFail() {
+        CreateAuctionInput input = createInput(
+                ZonedDateTime.now().plusSeconds(1),
+                BigDecimal.valueOf(30),
+                BigDecimal.valueOf(20)
+        );
+        mockItemFound();
+
+        IllegalArgumentException ex =
+                assertThrows(IllegalArgumentException.class,
+                        () -> auctionService.createAuction(input));
+
+        assertEquals("Reserve price must be greater than starting price", ex.getMessage());
+    }
+
+    @Test
+    void givenDurationShorterThan10Minutes_shouldFail() {
+        CreateAuctionInput input = new CreateAuctionInput(
+                ITEM_ID,
+                ZonedDateTime.now().plusSeconds(1),
+                Duration.ofMinutes(5),
+                STARTING_PRICE,
+                RESERVE_PRICE
+        );
+
+        mockItemFound();
+
+        IllegalArgumentException ex =
+                assertThrows(IllegalArgumentException.class,
+                        () -> auctionService.createAuction(input));
+
+        assertEquals("Duration must be longer than 10 minutes!", ex.getMessage());
+    }
+
+    @Test
+    void givenDurationLongerThan7Days_shouldFail() {
+        CreateAuctionInput input = new CreateAuctionInput(
+                ITEM_ID,
+                ZonedDateTime.now().plusSeconds(1),
+                Duration.ofDays(8),
+                STARTING_PRICE,
+                RESERVE_PRICE
+        );
+
+        mockItemFound();
+
+        IllegalArgumentException ex =
+                assertThrows(IllegalArgumentException.class,
+                        () -> auctionService.createAuction(input));
+
+        assertEquals("Duration must be shorter than 7 days!", ex.getMessage());
     }
 
 
