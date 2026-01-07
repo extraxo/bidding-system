@@ -1,7 +1,6 @@
 package BiddingSystem.BiddingSystemRepo;
 
 
-import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -12,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // TODO: Test token expire
 
-public class AuthFlowTest extends BaseTestClass{
+public class AuthIntegrationTest extends BaseTestClass{
 
     @Test
     public void testAuthFunctionality() throws Exception {

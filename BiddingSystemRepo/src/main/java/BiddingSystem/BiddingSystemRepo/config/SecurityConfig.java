@@ -1,6 +1,7 @@
 package BiddingSystem.BiddingSystemRepo.config;
 
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,11 +55,20 @@ public class SecurityConfig {
                         "/v3/api-docs/**"      // Allow all v3/api-docs paths
                 )
                 .permitAll()  // These paths don't need JWT authentication
+                .requestMatchers("/api/v1/item/**").authenticated()
                 .anyRequest().authenticated());
 
         // don't use sessions because again we use JWT
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+
+//        returns 401 unauthenticated
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint(
+                        (request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                )
+        );
         // runs before the UsernamePassword filter
         // but since we added the user to trusted/authenticated users in the aut local
         // storage (see JwtFilter.java)

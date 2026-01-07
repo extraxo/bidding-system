@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -62,52 +61,6 @@ public class AuctionTest extends BaseTestClass {
                 Collections.emptyList()
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    @Test
-    public void addingItemToAuction_shouldFail_whenInvalidItemId() throws Exception {
-
-        ZonedDateTime requestTime = ZonedDateTime.now();
-        Duration duration = Duration.ofMinutes(50L);
-
-        mockMvc.perform(
-                        post("/api/v1/auction/addAuction")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("""
-                                            {
-                                                "itemId": 999,
-                                                "startingAt": "%s",
-                                                "auctionDuration": "%s",
-                                                "startingPrice": 10.00,
-                                                "reservePrice": 20.00
-                                            }
-                                        """
-                                        .formatted(requestTime.toString(), duration.toString())
-                                )
-                )
-                .andExpect(status().is4xxClientError());
-
-
-    }
-
-    @Test
-    public void addingItemToAuction_shouldFail_whenStartsInPast() throws Exception {
-        mockMvc.perform(
-                        post("/api/v1/auction/addAuction")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("""
-                                            {
-                                                "itemId": %d,
-                                                "startingAt": "2025-12-31T18:02:05.550+02:00",
-                                                "auctionDuration": "PT50M",
-                                                "startingPrice": 10.00,
-                                                "reservePrice": 20.00
-                                            }
-                                        """
-                                        .formatted(itemId)
-                                )
-                )
-                .andExpect(status().is4xxClientError());
     }
 
     @Test

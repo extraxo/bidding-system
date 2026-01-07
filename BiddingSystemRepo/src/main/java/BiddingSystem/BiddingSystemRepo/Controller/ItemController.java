@@ -3,6 +3,8 @@ package BiddingSystem.BiddingSystemRepo.Controller;
 
 import BiddingSystem.BiddingSystemRepo.DTO.ItemDTO.RegisterItemDTO;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.Item;
+import BiddingSystem.BiddingSystemRepo.Response.UserResponseDTO.CreateItemResponseDTO;
+import BiddingSystem.BiddingSystemRepo.Response.UserResponseDTO.UserRegisterResponseDTO;
 import BiddingSystem.BiddingSystemRepo.Service.ItemService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -25,10 +27,9 @@ public class ItemController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/addItem")
+    @PostMapping("/")
     public ResponseEntity<?> addItem(@Valid @RequestBody RegisterItemDTO registerItemDTO) throws Exception {
-        itemService.addItem(modelMapper.map(registerItemDTO, Item.class));
-        return ResponseEntity.ok("Item added successfully");
+        return ResponseEntity.ok(modelMapper.map(itemService.addItem(registerItemDTO), CreateItemResponseDTO.class));
     }
 
 

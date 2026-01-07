@@ -4,6 +4,8 @@ package BiddingSystem.BiddingSystemRepo.Model.Entity;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemCategoryEnum;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemConditionEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Item extends BaseEntity {
 
+    @NotBlank(message = "Item name cannot be blank!")
     private String name;
 
+    @Size(min = 2, message = "Please add more descriptive text!")
+    @Size(max = 200, message = "Description too long!")
     private String description;
 
     @Enumerated(EnumType.STRING)

@@ -1,6 +1,5 @@
 package BiddingSystem.BiddingSystemRepo.DTO.BidDTO;
 
-import BiddingSystem.BiddingSystemRepo.customAnotations.PresentOrFutureWithTolerance;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

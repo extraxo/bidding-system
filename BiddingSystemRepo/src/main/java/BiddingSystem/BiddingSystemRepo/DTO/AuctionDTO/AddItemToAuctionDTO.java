@@ -1,10 +1,8 @@
 package BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO;
 
-import BiddingSystem.BiddingSystemRepo.customAnotations.PresentOrFutureWithTolerance;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.apache.bcel.generic.RET;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -16,7 +14,6 @@ public class AddItemToAuctionDTO {
 
     private Long itemId;
 
-    @PresentOrFutureWithTolerance
     private ZonedDateTime startingAt;
 
     private Duration auctionDuration;

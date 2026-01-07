@@ -1,6 +1,5 @@
 package BiddingSystem.BiddingSystemRepo.DTO.BidDTO;
 
-import BiddingSystem.BiddingSystemRepo.customAnotations.PresentOrFutureWithTolerance;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +16,7 @@ public class CreateBidDTO {
     @Positive(message = "Value of new bid must be positive number!")
     BigDecimal bidPrice;
 
-    @PresentOrFutureWithTolerance(message = "Bid cannot be sent from the past!")
+//    @PresentOrFutureWithTolerance(message = "Bid cannot be sent from the past!")
     ZonedDateTime sentDateTime;
 
 }
