@@ -49,6 +49,33 @@ public class AuctionService {
         return (Long) authentication.getPrincipal();
     }
 
+    private void validatePrices(CreateAuctionInput input) {
+        if (input.getStartingPrice().signum() <= 0) {
+            throw new IllegalArgumentException("Starting price must be positive");
+        }
+
+        if (input.getReservePrice().signum() <= 0) {
+            throw new IllegalArgumentException("Reserve price must be positive");
+        }
+
+        if (input.getReservePrice().compareTo(input.getStartingPrice()) <= 0) {
+            throw new IllegalArgumentException("Reserve price must be greater than starting price");
+        }
+    }
+
+    private void validateDurationTime(CreateAuctionInput input){
+        Duration minDuration = Duration.ofMinutes(10);
+        Duration maxDuration = Duration.ofDays(7);
+
+        if (input.getDuration().compareTo(minDuration) < 0){
+            throw new IllegalArgumentException("Duration must be longer than 10 minutes!");
+        }
+
+        if (input.getDuration().compareTo(maxDuration) > 0){
+            throw new IllegalArgumentException("Duration must be shorter than 7 days!");
+        }
+    }
+
     public void createAuction(CreateAuctionInput input) {
 
         ZonedDateTime now = ZonedDateTime.now();
@@ -60,6 +87,8 @@ public class AuctionService {
         if (input.getStartingAt().isBefore(now.minusSeconds(2))) {
             throw new AuctionPastStartingTimeException("Auction cannot start more than 2 seconds ago");
         }
+        validatePrices(input);
+        validateDurationTime(input);
 
 //        May be broken here by the AuctionStatusEnums.STATE
         if (auctionRepository.existsByItemIdAndAuctionStatusEnum(input.getItemId(), AuctionStatusEnum.ACTIVE) ||
