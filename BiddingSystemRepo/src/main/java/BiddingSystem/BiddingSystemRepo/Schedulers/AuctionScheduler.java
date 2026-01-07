@@ -15,16 +15,21 @@ public class AuctionScheduler {
         this.auctionService = auctionService;
     }
 
-    //    Bidding time ends
+    // Bidding time ends
     @Scheduled(initialDelay = 10000, fixedDelay = 60000)
     public void checkForExpiredAuctions() {
         auctionService.finishExpiredAuctions();
     }
 
-    //    Payment time ends
+    // Payment time ends
     @Scheduled(fixedDelay = 3000)
     public void checkForUnpaidAuctions() {
         auctionService.finishUnpaidAuctions();
+    }
+
+    @Scheduled(fixedDelay = 3000)
+    public void checkForScheduledAuctions() {
+        auctionService.makeAuctionActive();
     }
 
 }

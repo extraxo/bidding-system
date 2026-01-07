@@ -54,7 +54,8 @@ public class AuctionService {
         ZonedDateTime now = ZonedDateTime.now();
         Long userId = extractUserId();
 
-        Item Item = itemRepository.findByIdAndOwner_Id(input.getItemId(), userId).orElseThrow(() -> new ItemNotFound("Item not found with id " + input.getItemId()));
+        Item Item = itemRepository.findByIdAndOwner_Id(input.getItemId(), userId)
+                .orElseThrow(() -> new ItemNotFound("Item not found with id " + input.getItemId()));
 
         if (input.getStartingAt().isBefore(now.minusSeconds(2))) {
             throw new AuctionPastStartingTimeException("Auction cannot start more than 2 seconds ago");
@@ -81,6 +82,9 @@ public class AuctionService {
                         ? input.getDuration()
                         : Duration.ofDays(1);
 
+        Duration auctionDuration = (input.getDuration() != null)
+                ? input.getDuration()
+                : Duration.ofDays(1);
 
         Auction auction = new Auction();
         auction.setItem(Item);
@@ -93,9 +97,10 @@ public class AuctionService {
         auctionRepository.save(auction);
     }
 
-    //    TODO: Extend the make publish logic
+    // TODO: Extend the make publish logic
     public void makePublish(Long auctionId) throws Exception {
-        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new AuctionNotFound("Item not found with id " + auctionId));
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new AuctionNotFound("Item not found with id " + auctionId));
 
         if (auction.getAuctionStatusEnum() != AuctionStatusEnum.DRAFT) {
             throw new Exception("Invalid change of auction status");
@@ -112,8 +117,7 @@ public class AuctionService {
 
         List<Auction> auctionList = auctionRepository.findByAuctionStatusEnumAndEndsAtBefore(
                 AuctionStatusEnum.ACTIVE,
-                now
-        );
+                now);
 
         if (auctionList.isEmpty()) {
             return;
@@ -122,17 +126,15 @@ public class AuctionService {
         auctionList.forEach(this::closeAuction);
         auctionRepository.saveAll(auctionList);
 
-
     }
 
-    //    N + 1 Query
+    // N + 1 Query
     public void closeAuction(Auction auction) {
         if (auction.getAuctionStatusEnum() != AuctionStatusEnum.ACTIVE) {
             return;
         }
 
-        Optional<Bid> highestBid =
-                bidRepository.findTopByAuctionOrderByPriceDesc(auction);
+        Optional<Bid> highestBid = bidRepository.findTopByAuctionOrderByPriceDesc(auction);
 
         if (highestBid.isPresent()
                 && highestBid.get().getPrice().compareTo(auction.getReservePrice()) >= 0) {
@@ -189,8 +191,7 @@ public class AuctionService {
 
         List<Auction> auctionList = auctionRepository.findByAuctionStatusEnumAndPaymentDeadlineBefore(
                 AuctionStatusEnum.PENDING_PAYMENT,
-                now
-        );
+                now);
 
         if (auctionList.isEmpty()) {
             return;
@@ -199,6 +200,21 @@ public class AuctionService {
             auction.setAuctionStatusEnum(AuctionStatusEnum.ENDED_FAILED);
             System.out.println("Auction failed due to unpaid item price");
         }
+    }
+
+    @Transactional
+    public void makeAuctionActive() {
+
+        ZonedDateTime now = ZonedDateTime.now();
+
+        List<Auction> scheduledAuctions = auctionRepository
+                .findByAuctionStatusEnumAndStartingAtLessThanEqual(AuctionStatusEnum.SCHEDULED, now);
+
+        for (Auction auction : scheduledAuctions) {
+            auction.setAuctionStatusEnum(AuctionStatusEnum.ACTIVE);
+        }
+
+        auctionRepository.saveAll(scheduledAuctions);
     }
 
 }

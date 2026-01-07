@@ -38,6 +38,8 @@ public class BidService {
 
     public void makeBid(CreateBidInput createBidInput) {
 
+        ZonedDateTime now = ZonedDateTime.now();
+
         Auction auction = auctionRepository.findById(createBidInput.getAuctionId())
                 .orElseThrow(() -> new AuctionNotFound("Auction with this id not found!"));
 
@@ -45,7 +47,7 @@ public class BidService {
             throw new AuctionBidOnInvalidStatus("You can bid only on active auctions");
         }
 
-        if (auction.getEndsAt().isBefore(createBidInput.getSentDateTime())){
+        if (auction.getEndsAt().isBefore(now)) {
             throw new BidSentAfterEndTimeException("Bid cannot be sent after end of auction");
         }
 
@@ -54,7 +56,7 @@ public class BidService {
         User user = userRepository.findUserById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Such user not found"));
 
-        if (Objects.equals(auction.getItem().getOwner().getId(), userId)){
+        if (Objects.equals(auction.getItem().getOwner().getId(), userId)) {
             throw new OwnerBiddingOwnItemException("Owner of item cannot bid on its own listed items!");
         }
 
@@ -63,21 +65,20 @@ public class BidService {
                 .map(Bid::getPrice)
                 .orElse(auction.getStartingPrice());
 
-        if (currentPrice.compareTo(createBidInput.getBidPrice()) > 0){
-            throw new InvalidBidException("New bid must be more than the last one!");
+        if (currentPrice.compareTo(createBidInput.getBidPrice()) >= 0) {
+            throw new InvalidBidException("New bid must be higher than the current price!");
         }
 
-        if (createBidInput.getBidPrice().subtract(currentPrice).compareTo(auction.getMinimumIncrement()) < 0){
+        if (createBidInput.getBidPrice().subtract(currentPrice).compareTo(auction.getMinimumIncrement()) < 0) {
             throw new InvalidBidIncrementException("New bid does not meet minimum increment requirements!");
         }
 
         Bid bid = new Bid();
         bid.setUser(user);
         bid.setAuction(auction);
-        bid.setCreatedAt(ZonedDateTime.now());
+        bid.setCreatedAt(now); 
         bid.setPrice(createBidInput.getBidPrice());
+
         bidRepository.save(bid);
-
     }
-
 }

@@ -17,6 +17,8 @@ public interface AuctionRepository extends JpaRepository<Auction,Long> {
 
     List<Auction> findByAuctionStatusEnumAndEndsAtBefore(AuctionStatusEnum auctionStatusEnum, ZonedDateTime zonedDateTime);
 
+    List<Auction> findByAuctionStatusEnumAndStartingAtLessThanEqual(AuctionStatusEnum auctionStatusEnum, ZonedDateTime startingAt);
+
     List<Auction> findByAuctionStatusEnumAndPaymentDeadlineBefore(AuctionStatusEnum status, ZonedDateTime time);
 
     Optional<Auction> findByItemId(Long itemId);

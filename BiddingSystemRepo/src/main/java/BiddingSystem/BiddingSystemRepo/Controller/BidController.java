@@ -33,8 +33,7 @@ public class BidController {
 
         CreateBidInput createAuctionInput = new CreateBidInput(
                 createBidDTO.getAuctionId(),
-                createBidDTO.getBidPrice(),
-                createBidDTO.getSentDateTime()
+                createBidDTO.getBidPrice()
         );
 
         bidService.makeBid(createAuctionInput);
