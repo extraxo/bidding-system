@@ -40,7 +40,6 @@ public class AuthenticationServiceTest {
     @InjectMocks
     AuthService authService;
 
-
     @Test
     public void givenCredentials_shouldLogin() {
 
