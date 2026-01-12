@@ -37,7 +37,7 @@ public class BidController {
         );
 
         bidService.makeBid(createAuctionInput);
-
+//        TODO: RETURN DATA NOT TEXT
         return ResponseEntity.ok("Bid Created successfully");
     }
 }

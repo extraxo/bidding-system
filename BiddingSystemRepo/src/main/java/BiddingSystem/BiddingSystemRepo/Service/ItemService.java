@@ -32,7 +32,7 @@ public class ItemService {
     public OutputItemDTO addItem(RegisterItemDTO itemDTO) throws ItemAlreadyInUserInventory {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
-        User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
 
         if (itemRepository.existsByOwnerAndName(user,itemDTO.getName())){
             throw new ItemAlreadyInUserInventory("Item with same name already in current user's inventory!");

@@ -54,7 +54,7 @@ public class BidService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
-        User user = userRepository.findUserById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Such user not found"));
 
         if (Objects.equals(auction.getItem().getOwner().getId(), userId)) {

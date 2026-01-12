@@ -71,7 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String userIdStr = claims.getSubject();
             Long userId = Long.valueOf(userIdStr);
 
-            User user = userRepository.findUserById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
+            User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No such user!"));
             if (user == null) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not found");
                 return;

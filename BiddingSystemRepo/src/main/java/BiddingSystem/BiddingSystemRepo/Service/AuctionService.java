@@ -267,7 +267,10 @@ public class AuctionService {
     }
 
     public ExposeAuctionDTO getAuctionById(Long auctionId){
-        return modelMapper.map(auctionRepository.findByItemId(auctionId).orElseThrow(() -> new InvalidBidException("Invalid")),ExposeAuctionDTO.class);
+
+        Auction auction = auctionRepository.findById(auctionId).orElseThrow(() -> new AuctionNotFound("Auction not found"));
+
+        return modelMapper.map(auction,ExposeAuctionDTO.class);
     }
 
 }

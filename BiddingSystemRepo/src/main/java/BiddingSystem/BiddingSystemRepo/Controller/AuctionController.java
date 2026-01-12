@@ -3,8 +3,6 @@ package BiddingSystem.BiddingSystemRepo.Controller;
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.AddItemToAuctionDTO;
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.CreateAuctionInput;
 import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.ExposeAuctionDTO;
-import BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO.MakePaymentDTO;
-import BiddingSystem.BiddingSystemRepo.Model.Entity.Auction;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.AuctionStatusEnum;
 import BiddingSystem.BiddingSystemRepo.Service.AuctionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +24,9 @@ public class AuctionController {
         this.auctionService = auctionService;
     }
 
+    @Operation(
+            summary = "Create auction"
+    )
     @PostMapping("/")
     public ResponseEntity<?> addItem(
             @RequestBody @Valid AddItemToAuctionDTO addItemToAuctionDTO
@@ -62,15 +63,13 @@ public class AuctionController {
         return ResponseEntity.ok(auctionList);
     }
 
+    @Operation(
+            summary = "Get specific auction"
+    )
     @GetMapping("/{auctionId}")
     public ResponseEntity<ExposeAuctionDTO> getAuction(@PathVariable("auctionId") Long auctionId){
         ExposeAuctionDTO dto = auctionService.getAuctionById(auctionId);
         return ResponseEntity.ok(dto);
-    }
-
-    public ResponseEntity<?> makeAuctionPayment(@RequestBody MakePaymentDTO makePaymentDTO){
-        auctionService.makePayment(makePaymentDTO.getAuctionId());
-        return ResponseEntity.ok("Payment Successfully");
     }
 
 }

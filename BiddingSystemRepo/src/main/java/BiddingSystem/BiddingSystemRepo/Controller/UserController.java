@@ -57,5 +57,6 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+
 }
 

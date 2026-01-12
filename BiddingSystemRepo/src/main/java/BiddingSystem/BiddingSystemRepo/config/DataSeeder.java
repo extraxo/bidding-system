@@ -64,9 +64,16 @@ public class DataSeeder {
             user2.setAge(33);
             user2.setAddress("Mega street");
 
+            User user3 = new User();
+            user3.setEmail("brotha@email.com");
+            user3.setUsername("Cooking123+");
+            user3.setPassword(passwordEncoder.encode("MyPassword"));
+            user3.setAge(40);
+            user3.setAddress("Home");
 
             userRepository.save(user1);
             userRepository.save(user2);
+            userRepository.save(user3);
 
             Item item = new Item();
             item.setName("Pot of Greed");
@@ -131,13 +138,15 @@ public class DataSeeder {
             auction2.setAuctionDuration(Duration.ofSeconds(300));
             auction2.setStartingPrice(startPrice);
 
-
             Auction auction3 = new Auction();
             auction3.setStartingAt(ZonedDateTime.now());
             auction3.setAuctionStatusEnum(AuctionStatusEnum.ACTIVE);
-            auction3.setAuctionDuration(Duration.ofSeconds(300));
+            auction3.setAuctionDuration(Duration.ofSeconds(60));
             auction3.setStartingPrice(startPrice);
-
+            auction3.setMinimumIncrement(BigDecimal.valueOf(10));
+            auction3.setStartingPrice(BigDecimal.valueOf(35));
+            auction3.setReservePrice(BigDecimal.valueOf(60));
+            auction3.setItem(item3);
 
             List<Auction> auctionList = new ArrayList<>(Arrays.asList(auction1,auction2,auction3,auction4));
             auctionRepository.saveAll(auctionList);
@@ -159,6 +168,7 @@ public class DataSeeder {
             bid3.setUser(user2);
             bid3.setPrice(new BigDecimal("18.00"));
             bid3.setCreatedAt(ZonedDateTime.now().minusMinutes(1));
+
 
             bidRepository.saveAll(List.of(bid1, bid2, bid3));
         };
