@@ -1,21 +1,15 @@
 package BiddingSystem.BiddingSystemRepo.config;
 
-import BiddingSystem.BiddingSystemRepo.Model.Entity.Auction;
-import BiddingSystem.BiddingSystemRepo.Model.Entity.Bid;
-import BiddingSystem.BiddingSystemRepo.Model.Entity.Item;
-import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
+import BiddingSystem.BiddingSystemRepo.Model.Entity.*;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.AuctionStatusEnum;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemCategoryEnum;
 import BiddingSystem.BiddingSystemRepo.Model.Enum.ItemConditionEnum;
-import BiddingSystem.BiddingSystemRepo.Repository.AuctionRepository;
-import BiddingSystem.BiddingSystemRepo.Repository.BidRepository;
-import BiddingSystem.BiddingSystemRepo.Repository.ItemRepository;
-import BiddingSystem.BiddingSystemRepo.Repository.UserRepository;
+import BiddingSystem.BiddingSystemRepo.Model.Enum.RoleEnum;
+import BiddingSystem.BiddingSystemRepo.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
@@ -31,16 +25,19 @@ public class DataSeeder {
     private final AuctionRepository auctionRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
+    private final SystemBalanceRepository systemBalanceRepository;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    public DataSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder, AuctionRepository auctionRepository, ItemRepository itemRepository, BidRepository bidRepository) {
+    public DataSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder, AuctionRepository auctionRepository,
+                      ItemRepository itemRepository, BidRepository bidRepository, SystemBalanceRepository systemBalanceRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.itemRepository = itemRepository;
         this.auctionRepository = auctionRepository;
         this.bidRepository = bidRepository;
+        this.systemBalanceRepository = systemBalanceRepository;
     }
 
 
@@ -56,7 +53,6 @@ public class DataSeeder {
             user1.setAge(30);
             user1.setAddress("Grove Street");
 
-
             User user2 = new User();
             user2.setEmail("user2@gmail.com");
             user2.setUsername("theSmallFish");
@@ -71,9 +67,18 @@ public class DataSeeder {
             user3.setAge(40);
             user3.setAddress("Home");
 
+            User admin = new User();
+            admin.setEmail("admin@abv.bg");
+            admin.setUsername("Amin123+");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setAge(50);
+            admin.setAddress("Site");
+            admin.setRole(RoleEnum.Admin);
+
             userRepository.save(user1);
             userRepository.save(user2);
             userRepository.save(user3);
+            userRepository.save(admin);
 
             Item item = new Item();
             item.setName("Pot of Greed");
@@ -169,8 +174,10 @@ public class DataSeeder {
             bid3.setPrice(new BigDecimal("18.00"));
             bid3.setCreatedAt(ZonedDateTime.now().minusMinutes(1));
 
-
             bidRepository.saveAll(List.of(bid1, bid2, bid3));
+
+            SystemBalance systemBalance = new SystemBalance();
+            systemBalanceRepository.save(systemBalance);
         };
     }
 }

@@ -1,7 +1,13 @@
 package BiddingSystem.BiddingSystemRepo.Controller;
 
+import BiddingSystem.BiddingSystemRepo.DTO.BidDTO.CreateBidDTO;
+import BiddingSystem.BiddingSystemRepo.DTO.BidDTO.CreateBidInput;
+import BiddingSystem.BiddingSystemRepo.Model.Entity.SystemBalance;
+import BiddingSystem.BiddingSystemRepo.Service.SystemBalanceService;
 import BiddingSystem.BiddingSystemRepo.Service.UserBalanceService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -13,38 +19,46 @@ import java.math.BigDecimal;
 public class UserBalanceController {
 
     private final UserBalanceService userBalanceService;
+    private final SystemBalanceService systemBalanceService;
 
-    public UserBalanceController(UserBalanceService userBalanceService) {
+    public UserBalanceController(UserBalanceService userBalanceService, SystemBalanceService systemBalanceService) {
         this.userBalanceService = userBalanceService;
+        this.systemBalanceService = systemBalanceService;
     }
 
-    // Deposit money
     @PostMapping("/deposit")
-    public ResponseEntity<?> deposit(@RequestParam Long amount) {
+    public ResponseEntity<?> deposit(@RequestParam BigDecimal amount) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal(); // Get the logged-in user's ID
+        Long userId = (Long) authentication.getPrincipal();
 
         userBalanceService.deposit(userId, amount);
         return ResponseEntity.ok("Money Deposited Successfully");
     }
 
-    // Withdraw money
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdraw(@RequestParam Long amount) {
+    public ResponseEntity<?> withdraw(@RequestParam BigDecimal amount) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal(); // Get the logged-in user's ID
+        Long userId = (Long) authentication.getPrincipal();
 
         userBalanceService.withdraw(userId, amount);
         return ResponseEntity.ok("Money withdrawn successfully");
     }
 
-    // View balance (GET request as it's a read operation)
     @GetMapping
     public ResponseEntity<?> viewBalance() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal(); // Get the logged-in user's ID
+        Long userId = (Long) authentication.getPrincipal();
 
         BigDecimal userBalance = userBalanceService.viewBalance(userId);
         return ResponseEntity.ok("User balance: " + userBalance);
+    }
+
+    @PostMapping("/adminOnlyController")
+    @PreAuthorize("hasRole('RoleEnum.Admin')")
+    public ResponseEntity<?> adminOnly(){
+
+        systemBalanceService.getSystemBalance();
+
+        return ResponseEntity.ok("Admin only");
     }
 }
