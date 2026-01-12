@@ -24,6 +24,8 @@ public class AddItemToAuctionDTO {
     @Positive(message = "Starting price must be positive number!")
     private BigDecimal startingPrice;
 
+    private BigDecimal minimumIncrement;
+
     @AssertTrue(message = "Auction duration must be between 10 minutes and 7 days")
     public boolean isAuctionDurationValid() {
         if (auctionDuration == null) {

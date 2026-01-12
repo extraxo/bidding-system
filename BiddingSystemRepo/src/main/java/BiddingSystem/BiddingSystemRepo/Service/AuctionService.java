@@ -118,6 +118,7 @@ public class AuctionService {
         auction.setStartingAt(startTime);
         auction.setReservePrice(input.getReservePrice());
         auction.setStartingPrice(input.getStartingPrice());
+        auction.setMinimumIncrement(input.getMinimumIncrement());
         auction.setAuctionDuration(auctionDuration);
         auction.setAuctionStatusEnum(initialStatus);
 
