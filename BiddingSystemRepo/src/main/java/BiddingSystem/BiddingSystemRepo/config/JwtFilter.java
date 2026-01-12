@@ -11,6 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -58,6 +60,8 @@ public class JwtFilter extends OncePerRequestFilter {
                     .parseSignedClaims(token)
                     .getPayload();
 
+
+
             String jti = claims.getId();
             if (jti == null || blacklistStore.contains(jti)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -77,11 +81,17 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
 
+            String roleName = claims.get("role", String.class);
+
+            List<SimpleGrantedAuthority> authorities = Collections.singletonList(
+                    new SimpleGrantedAuthority(roleName)
+            );
+
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             user.getId(),
                             null,
-                            Collections.emptyList()
+                            authorities
                     );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

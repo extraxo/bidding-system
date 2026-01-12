@@ -52,6 +52,8 @@ public class SecurityConfig {
                 )
                 .permitAll()
                 .requestMatchers("/api/v1/item/**").authenticated()
+                .requestMatchers("/api/v1/systemBalance/**").hasAuthority("Admin")
+
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

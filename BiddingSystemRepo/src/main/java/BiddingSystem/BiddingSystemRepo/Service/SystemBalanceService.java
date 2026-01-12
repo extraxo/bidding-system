@@ -1,5 +1,6 @@
 package BiddingSystem.BiddingSystemRepo.Service;
 
+import BiddingSystem.BiddingSystemRepo.DTO.SystemBalanceDTO.SystemBalanceResponseDTO;
 import BiddingSystem.BiddingSystemRepo.Exception.SystemBalanceExceptions.SystemNotFoundException;
 import BiddingSystem.BiddingSystemRepo.Model.Entity.SystemBalance;
 import BiddingSystem.BiddingSystemRepo.Repository.SystemBalanceRepository;
@@ -14,9 +15,14 @@ public class SystemBalanceService {
         this.systemBalanceRepository = systemBalanceRepository;
     }
 
-    public void getSystemBalance(){
-        SystemBalance systemBalance = systemBalanceRepository.findById(1L).orElseThrow(() -> new SystemNotFoundException("System not found!"));
-        System.out.println("Accumulated deposit fees: " + systemBalance.getAccumulatedDepositFees() + "\nAccumulated withdraw fees: " + systemBalance.getAccumulatedWithdrawFees());
+    public SystemBalanceResponseDTO getSystemBalance(){
+        SystemBalance systemBalance = systemBalanceRepository.findById(1L)
+                .orElseThrow(() -> new SystemNotFoundException("System not found!"));
+
+        return new SystemBalanceResponseDTO(
+                systemBalance.getAccumulatedDepositFees(),
+                systemBalance.getAccumulatedWithdrawFees()
+        );
     }
 
 }

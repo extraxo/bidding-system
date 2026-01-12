@@ -53,12 +53,5 @@ public class UserBalanceController {
         return ResponseEntity.ok("User balance: " + userBalance);
     }
 
-    @PostMapping("/adminOnlyController")
-    @PreAuthorize("hasRole('RoleEnum.Admin')")
-    public ResponseEntity<?> adminOnly(){
 
-        systemBalanceService.getSystemBalance();
-
-        return ResponseEntity.ok("Admin only");
-    }
 }

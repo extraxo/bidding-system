@@ -56,7 +56,5 @@ public class UserController {
         blacklistStore.addToken(jti);
         return ResponseEntity.ok("Logged out successfully");
     }
-
-
 }
 

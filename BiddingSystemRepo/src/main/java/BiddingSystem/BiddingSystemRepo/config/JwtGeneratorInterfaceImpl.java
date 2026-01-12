@@ -33,11 +33,11 @@ public class JwtGeneratorInterfaceImpl{
                 .claims()
                 .id(jti)
                 .subject(String.valueOf(user.getId()))
+                .add("role", user.getRole().name())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * TOKEN_EXPIRY_TIME_IN_MINUTES))
                 .and()
-
-                .signWith(getSignInKey())
+                 .signWith(getSignInKey())
                 .compact();
 
         Map<String, String> jwtTokenGen = new HashMap<>();
