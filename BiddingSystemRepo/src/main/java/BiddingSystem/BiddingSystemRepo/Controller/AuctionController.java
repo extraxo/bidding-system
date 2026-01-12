@@ -37,7 +37,8 @@ public class AuctionController {
                 addItemToAuctionDTO.getStartingAt(),
                 addItemToAuctionDTO.getAuctionDuration(),
                 addItemToAuctionDTO.getStartingPrice(),
-                addItemToAuctionDTO.getReservePrice()
+                addItemToAuctionDTO.getReservePrice(),
+                addItemToAuctionDTO.getMinimumIncrement()
         );
         auctionService.createAuction(input);
         return ResponseEntity.ok("Added successfully");

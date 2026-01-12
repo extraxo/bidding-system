@@ -17,6 +17,4 @@ public class CreateBidDTO {
     BigDecimal bidPrice;
 
 //    @PresentOrFutureWithTolerance(message = "Bid cannot be sent from the past!")
-    ZonedDateTime sentDateTime;
-
 }

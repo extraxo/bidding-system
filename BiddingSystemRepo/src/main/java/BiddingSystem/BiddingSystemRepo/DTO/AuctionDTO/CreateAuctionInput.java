@@ -23,4 +23,8 @@ public class CreateAuctionInput {
     @Positive
     @NotNull
     private final BigDecimal reservePrice;
+
+    @Positive
+    @NotNull
+    private final BigDecimal minimumIncrement;
 }

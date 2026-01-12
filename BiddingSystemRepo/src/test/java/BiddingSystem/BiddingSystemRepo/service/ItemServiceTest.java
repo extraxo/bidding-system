@@ -64,8 +64,8 @@ public class ItemServiceTest{
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userRepository.findUserById(1L))
-                .thenReturn(Optional.of(user));
+        // when(userRepository.findUserById(1L))
+        //         .thenReturn(Optional.of(user));
 
         when(itemRepository.existsByOwnerAndName(user, dto.getName()))
                 .thenReturn(false);
@@ -126,8 +126,8 @@ public class ItemServiceTest{
         SecurityContextHolder.setContext(securityContext);
 
         // Mock repositories
-        when(userRepository.findUserById(1L))
-                .thenReturn(Optional.of(user));
+        // when(userRepository.findUserById(1L))
+        //         .thenReturn(Optional.of(user));
 
         Item item = new Item();
         item.setOwner(user);

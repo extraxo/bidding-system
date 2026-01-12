@@ -63,6 +63,7 @@ public class AuctionServiceTest {
     private static final Duration DEFAULT_DURATION = Duration.ofMinutes(10);
     private static final BigDecimal STARTING_PRICE = BigDecimal.TEN;
     private static final BigDecimal RESERVE_PRICE = BigDecimal.valueOf(20);
+    private static final BigDecimal MINIMUM_INCREMENT = BigDecimal.valueOf(2);
 
     private CreateAuctionInput createValidInput(ZonedDateTime startingAt) {
         return new CreateAuctionInput(
@@ -70,7 +71,9 @@ public class AuctionServiceTest {
                 startingAt,
                 DEFAULT_DURATION,
                 STARTING_PRICE,
-                RESERVE_PRICE
+                RESERVE_PRICE,
+                MINIMUM_INCREMENT
+                
         );
     }
 
@@ -84,7 +87,8 @@ public class AuctionServiceTest {
                 startingAt,
                 DEFAULT_DURATION,
                 startingPrice,
-                reservePrice
+                reservePrice,
+                MINIMUM_INCREMENT
         );
     }
 
@@ -188,7 +192,8 @@ public class AuctionServiceTest {
                 startingAt,
                 duration,
                 startingPrice,
-                reservePrice
+                reservePrice,
+                MINIMUM_INCREMENT
         );
 
 
@@ -312,7 +317,8 @@ public class AuctionServiceTest {
                 ZonedDateTime.now().plusSeconds(1),
                 Duration.ofMinutes(5),
                 STARTING_PRICE,
-                RESERVE_PRICE
+                RESERVE_PRICE,
+                MINIMUM_INCREMENT
         );
 
         mockItemFound();
@@ -331,7 +337,8 @@ public class AuctionServiceTest {
                 ZonedDateTime.now().plusSeconds(1),
                 Duration.ofDays(8),
                 STARTING_PRICE,
-                RESERVE_PRICE
+                RESERVE_PRICE,
+                MINIMUM_INCREMENT
         );
 
         mockItemFound();
