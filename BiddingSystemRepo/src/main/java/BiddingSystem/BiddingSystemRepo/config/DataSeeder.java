@@ -179,7 +179,6 @@ public class DataSeeder {
             SystemBalance systemBalance = new SystemBalance();
             systemBalanceRepository.save(systemBalance);
 
-            System.out.println("new change");
         };
     }
 }
