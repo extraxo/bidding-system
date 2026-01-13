@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.SecretKey;
@@ -43,6 +44,7 @@ public class UserController {
     @Operation(
             summary = "Register a user"
     )
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponseDTO> register(@Valid @RequestBody UserRegisterDTO dto) {
         return ResponseEntity.ok(modelMapper.map(authService.register(dto), UserRegisterResponseDTO.class));
@@ -52,9 +54,9 @@ public class UserController {
     @Operation(
             summary = "Login user"
     )
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserLoginDTO dto) {
-//        TODO: When having token, unaccessible, not relevant error
         return ResponseEntity.ok(authService.login(dto));
     }
 

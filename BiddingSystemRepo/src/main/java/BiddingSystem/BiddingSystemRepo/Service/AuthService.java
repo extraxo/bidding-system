@@ -9,7 +9,6 @@ import BiddingSystem.BiddingSystemRepo.Exception.UserExceptions.UsernameAlreadyE
 import BiddingSystem.BiddingSystemRepo.Model.Entity.User;
 import BiddingSystem.BiddingSystemRepo.Repository.UserRepository;
 import BiddingSystem.BiddingSystemRepo.config.JwtGeneratorInterfaceImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.util.Map;
 @Service
 public class AuthService {
 
-    //    private final BCryptPasswordEncoder encoder;
     private final PasswordEncoder encoder;
     private final JwtGeneratorInterfaceImpl jwtGeneratorInterface;
     private final UserRepository userRepository;

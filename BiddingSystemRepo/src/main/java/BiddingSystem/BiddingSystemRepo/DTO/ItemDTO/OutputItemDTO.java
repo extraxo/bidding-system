@@ -14,6 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OutputItemDTO {
 
+    private Long id;
+
     private String name;
 
     private String description;

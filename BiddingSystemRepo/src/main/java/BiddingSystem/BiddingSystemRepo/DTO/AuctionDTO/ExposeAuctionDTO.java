@@ -17,9 +17,6 @@ import java.util.List;
 @Setter
 public class ExposeAuctionDTO {
 
-//    @ManyToOne
-//    private Item item;
-
     private Long id;
 
     private ZonedDateTime startingAt;

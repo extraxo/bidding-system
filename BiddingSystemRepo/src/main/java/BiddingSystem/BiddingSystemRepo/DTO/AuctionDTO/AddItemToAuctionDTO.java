@@ -1,5 +1,6 @@
 package BiddingSystem.BiddingSystemRepo.DTO.AuctionDTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class AddItemToAuctionDTO {
 
     private ZonedDateTime startingAt;
 
+    @NotNull(message = "Duration can not be empty!")
     private Duration auctionDuration;
 
     @Positive(message = "Reserve price must be positive number!")
@@ -24,6 +26,10 @@ public class AddItemToAuctionDTO {
     @Positive(message = "Starting price must be positive number!")
     private BigDecimal startingPrice;
 
+    @Positive(message = "Minimal increment must be positive number!")
+    private BigDecimal minimumIncrement;
+
+    @JsonIgnore
     @AssertTrue(message = "Auction duration must be between 10 minutes and 7 days")
     public boolean isAuctionDurationValid() {
         if (auctionDuration == null) {
@@ -33,8 +39,9 @@ public class AddItemToAuctionDTO {
                 && auctionDuration.compareTo(Duration.ofDays(7)) <= 0;
     }
 
-    @AssertTrue
-    public boolean isStartingPriceLessThanAuction(){
+    @JsonIgnore
+    @AssertTrue(message = "Starting price must be less than reserve one.")
+    private boolean isStartingPriceLessThanAuction(){
         if (reservePrice == null || startingPrice == null){
             return true;
         }

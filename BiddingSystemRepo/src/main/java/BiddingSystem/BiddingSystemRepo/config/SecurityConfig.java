@@ -42,8 +42,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
 
                 .requestMatchers(
-                        "/api/v1/user/register",
-                        "/api/v1/user/login",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/v3/api-docs",
@@ -52,6 +50,7 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/api/v1/item/**").authenticated()
                 .requestMatchers("/api/v1/systemBalance/**").hasAuthority("Admin")
+                .requestMatchers("/api/v1/user/login", "/api/v1/user/register").anonymous()
 
                 .anyRequest().authenticated());
 

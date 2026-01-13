@@ -18,6 +18,7 @@ import BiddingSystem.BiddingSystemRepo.Repository.AuctionRepository;
 import BiddingSystem.BiddingSystemRepo.Repository.BidRepository;
 import BiddingSystem.BiddingSystemRepo.Repository.ItemRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,12 +26,18 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AuctionService {
+
+    private static final ZoneId BUSINESS_ZONE = ZoneId.of("Europe/Sofia");
+
 
     private final ItemRepository itemRepository;
     private final AuctionRepository auctionRepository;
@@ -58,6 +65,10 @@ public class AuctionService {
             throw new IllegalArgumentException("Reserve price must be positive");
         }
 
+        if (input.getMinimumIncrement().signum() <= 0) {
+            throw new IllegalArgumentException("Minimum increment must be positive");
+        }
+
         if (input.getReservePrice().compareTo(input.getStartingPrice()) <= 0) {
             throw new IllegalArgumentException("Reserve price must be greater than starting price");
         }
@@ -76,29 +87,34 @@ public class AuctionService {
         }
     }
 
-    public void createAuction(CreateAuctionInput input) {
+    public ExposeAuctionDTO createAuction(CreateAuctionInput input) {
 
         ZonedDateTime now = ZonedDateTime.now();
         Long userId = extractUserId();
 
+        Instant nowCompare = Instant.now();
+        Instant startCompare = input.getStartingAt().toInstant();
+
         Item Item = itemRepository.findByIdAndOwner_Id(input.getItemId(), userId)
                 .orElseThrow(() -> new ItemNotFound("Item not found with id " + input.getItemId()));
 
-        if (input.getStartingAt().isBefore(now.minusSeconds(2))) {
+
+        if (startCompare.isBefore(nowCompare.minusSeconds(2))) {
             throw new AuctionPastStartingTimeException("Auction cannot start more than 2 seconds ago");
         }
+
         validatePrices(input);
         validateDurationTime(input);
 
-//        May be broken here by the AuctionStatusEnums.STATE
         if (auctionRepository.existsByItemIdAndAuctionStatusEnum(input.getItemId(), AuctionStatusEnum.ACTIVE) ||
                 auctionRepository.existsByItemIdAndAuctionStatusEnum(input.getItemId(), AuctionStatusEnum.SCHEDULED)) {
             throw new ItemAlreadyInAuction("Current item already in active auction");
         }
 
+
         ZonedDateTime startTime =
-                (input.getStartingAt() != null)
-                        ? input.getStartingAt()
+                input.getStartingAt() != null
+                        ? input.getStartingAt().withZoneSameInstant(BUSINESS_ZONE)
                         : now;
 
         AuctionStatusEnum initialStatus =
@@ -112,16 +128,18 @@ public class AuctionService {
                         : Duration.ofDays(1);
 
 
-
         Auction auction = new Auction();
         auction.setItem(Item);
         auction.setStartingAt(startTime);
         auction.setReservePrice(input.getReservePrice());
         auction.setStartingPrice(input.getStartingPrice());
+        auction.setMinimumIncrement(input.getMinimumIncrement());
         auction.setAuctionDuration(auctionDuration);
         auction.setAuctionStatusEnum(initialStatus);
 
         auctionRepository.save(auction);
+
+        return modelMapper.map(auction, ExposeAuctionDTO.class);
     }
 
     // TODO: Extend the make publish logic
