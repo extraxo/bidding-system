@@ -65,7 +65,8 @@ public class AuctionController {
     }
 
     @Operation(
-            summary = "Get specific auction"
+            summary = "Get specific auction",
+            description = "Auction must be payed within 10 minutes by winner, otherwise auction is failed"
     )
     @GetMapping("/{auctionId}")
     public ResponseEntity<ExposeAuctionDTO> getAuction(@PathVariable("auctionId") Long auctionId){

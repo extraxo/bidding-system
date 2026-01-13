@@ -4,6 +4,7 @@ import BiddingSystem.BiddingSystemRepo.Model.Enum.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -27,6 +28,7 @@ public class User extends BaseEntity {
     private String username;
 
     @Min(18)
+    @Max(80)
     @Column(nullable = false)
     private int age;
 
