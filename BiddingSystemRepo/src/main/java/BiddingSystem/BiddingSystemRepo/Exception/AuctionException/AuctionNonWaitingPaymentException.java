@@ -8,4 +8,7 @@ public class AuctionNonWaitingPaymentException extends BaseCustomException {
         super(message, HttpStatus.BAD_REQUEST);
 
     }
+
+
+
 }
