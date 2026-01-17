@@ -185,6 +185,7 @@ public class ItemServiceTest{
         // Mock mappings
         when(modelMapper.map(item1, OutputItemDTO.class))
                 .thenReturn(new OutputItemDTO(
+                        1l,
                         "Pot of Greed",
                         "This is the pot of greed from Yu-Gi-Oh",
                         ItemCategoryEnum.COLLECTIBLES,
@@ -193,6 +194,7 @@ public class ItemServiceTest{
 
         when(modelMapper.map(item2, OutputItemDTO.class))
                 .thenReturn(new OutputItemDTO(
+                        1L,
                         "Yu Gi Oh card",
                         "this card has special powers",
                         ItemCategoryEnum.COLLECTIBLES,
@@ -201,6 +203,7 @@ public class ItemServiceTest{
 
         when(modelMapper.map(item3, OutputItemDTO.class))
                 .thenReturn(new OutputItemDTO(
+                        1l,
                         "newItem",
                         "okay",
                         ItemCategoryEnum.ELECTRONICS,
@@ -209,6 +212,7 @@ public class ItemServiceTest{
 
         when(modelMapper.map(item4, OutputItemDTO.class))
                 .thenReturn(new OutputItemDTO(
+                        1L,
                         "newItem2",
                         "okay",
                         ItemCategoryEnum.ELECTRONICS,

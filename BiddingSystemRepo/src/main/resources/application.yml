@@ -5,7 +5,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/newdb
     username: postgres
-    password: dsa
+#    Password changed from dsa to 123456
+    password: 123456
 
   jpa:
     hibernate:
