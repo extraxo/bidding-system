@@ -30,6 +30,9 @@ public class ExposeAuctionDTO {
 
     private BigDecimal minimumIncrement;
 
+//    Added now
+    private BigDecimal highestBid;
+
     @Enumerated(value = EnumType.STRING)
     private AuctionStatusEnum auctionStatusEnum;
 

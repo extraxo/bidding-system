@@ -5,7 +5,6 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/newdb
     username: postgres
-#    Password changed from dsa to 123456
     password: 123456
 
   jpa:
@@ -14,13 +13,27 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
 
-jwt:
-  secret: "ODE2YzBhNmJlMmFkODcxYzM5YWIwNjc5ZTM1Mzc5ZTY0ODc2Y2ZkMzg0MmQwZmEzZTgwYjliM2I="
-  message: "Login successful"
-
   sql:
     init:
       mode: always
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bobiminchev75@gmail.com
+    password: bumg tqfz ltnv erak
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            trust: smtp.gmail.com
+jwt:
+  secret: "ODE2YzBhNmJlMmFkODcxYzM5YWIwNjc5ZTM1Mzc5ZTY0ODc2Y2ZkMzg0MmQwZmEzZTgwYjliM2I="
+  message: "Login successful"
 
 h2:
   console:

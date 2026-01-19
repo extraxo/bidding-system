@@ -215,7 +215,7 @@ public class DataSeeder {
             auctionRepository.save(newAuction);
 
             User competitor1 = new User();
-            competitor1.setEmail("comp1@example.com");
+            competitor1.setEmail("dexidi8105@dretnar.com");
             competitor1.setUsername("comp1");
             competitor1.setPassword(passwordEncoder.encode("comp1"));
             competitor1.setAge(45);
@@ -261,20 +261,6 @@ public class DataSeeder {
             newAuction2.setItem(newItem);
 
             auctionRepository.save(newAuction2);
-
-
-
-
-
-
-
-
-
-
-
-
-
-// -----------------------------------------------------------------------------
 
         };
     }

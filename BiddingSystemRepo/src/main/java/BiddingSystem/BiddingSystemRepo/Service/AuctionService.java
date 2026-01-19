@@ -40,12 +40,14 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
     private final BidRepository bidRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
-    public AuctionService(ItemRepository itemRepository, AuctionRepository auctionRepository, BidRepository bidRepository, ModelMapper modelMapper) {
+    public AuctionService(ItemRepository itemRepository, AuctionRepository auctionRepository, BidRepository bidRepository, ModelMapper modelMapper, EmailService emailService) {
         this.itemRepository = itemRepository;
         this.auctionRepository = auctionRepository;
         this.bidRepository = bidRepository;
         this.modelMapper = modelMapper;
+        this.emailService = emailService;
     }
 
     private Long extractUserId(){
@@ -184,11 +186,14 @@ public class AuctionService {
         if (highestBid.isPresent()
                 && highestBid.get().getPrice().compareTo(auction.getReservePrice()) >= 0) {
 
-            auction.setAuctionStatusEnum(AuctionStatusEnum.PENDING_PAYMENT);
-            auction.setWinner(highestBid.get().getUser());
-            auction.setWinnerBid(highestBid.get());
+            User winner = highestBid.get().getUser();
 
+            auction.setAuctionStatusEnum(AuctionStatusEnum.PENDING_PAYMENT);
+            auction.setWinner(winner);
+            auction.setWinnerBid(highestBid.get());
             auction.setPaymentDeadline(ZonedDateTime.now().plusMinutes(10));
+
+            emailService.sendAuctionWonEmail(winner, auction);
 
         } else {
             auction.setAuctionStatusEnum(AuctionStatusEnum.ENDED_FAILED);

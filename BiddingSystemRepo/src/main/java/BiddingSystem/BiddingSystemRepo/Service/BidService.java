@@ -33,12 +33,14 @@ public class BidService {
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
-    public BidService(BidRepository bidRepository, AuctionRepository auctionRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public BidService(BidRepository bidRepository, AuctionRepository auctionRepository, UserRepository userRepository, ModelMapper modelMapper, EmailService emailService) {
         this.auctionRepository = auctionRepository;
         this.userRepository = userRepository;
         this.bidRepository = bidRepository;
         this.modelMapper = modelMapper;
+        this.emailService = emailService;
     }
 
     public BidDTO makeBid(CreateBidInput createBidInput) {
@@ -92,10 +94,19 @@ public class BidService {
 
         bidRepository.save(bid);
 
-        BidDTO bidDTO = modelMapper.map(bid,BidDTO.class);
+        currentBidOptional.ifPresent(previousBid -> {
+            User previousBidder = previousBid.getUser();
 
-        return bidDTO;
+            if (!previousBidder.getId().equals(userId)) {
+                emailService.sendOutbidEmail(
+                        previousBidder,
+                        auction,
+                        bid.getPrice()
+                );
+            }
+        });
+
+        return modelMapper.map(bid,BidDTO.class);
     }
 
-//    TODO: GET CURRENT MAX BID
 }
